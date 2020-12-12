@@ -1,0 +1,59 @@
+{
+    "name": "simonkub/oauth2-todoist",
+    "description": "This package provides Todoist OAuth 2.0 support for the PHP League's OAuth 2.0 Client.",
+    "keywords": [
+        "simonkub",
+        "oauth2-todoist"
+    ],
+    "homepage": "https://github.com/simonkub/oauth2-todoist",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Simon Kubiak",
+            "email": "mail@simonkubiak.de",
+            "homepage": "https://github.com/simonkub",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "league/oauth2-client": "^2.0",
+        "php": "^7.4|^8.0",
+        "ext-json": "*"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^2.16",
+        "phpunit/phpunit": "^9.3",
+        "vimeo/psalm": "^3.11"
+    },
+    "autoload": {
+        "psr-4": {
+            "Simonkub\\OAuth2\\Client\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Simonkub\\OAuth2\\Client\\Test\\": "tests"
+        }
+    },
+    "scripts": {
+        "psalm": "vendor/bin/psalm",
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage",
+        "format": "vendor/bin/php-cs-fixer fix --allow-risky=yes"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "funding": [
+        {
+            "type": "github",
+            "url": "https://github.com/sponsors/spatie"
+        },
+        {
+            "type": "other",
+            "url": "https://spatie.be/open-source/support-us"
+        }
+    ]
+}
