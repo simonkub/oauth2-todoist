@@ -1,0 +1,19 @@
+{
+    "projects": [
+        {
+            "id": 396936926,
+            "legacy_id": 128501470,
+            "name": "Project1",
+            "color": 30,
+            "parent_id": null,
+            "child_order": 1,
+            "collapsed": 0,
+            "shared": false,
+            "legacy_parent_id": null,
+            "sync_id": null,
+            "is_deleted": 0,
+            "is_archived": 0,
+            "is_favorite": 0
+        }
+    ]
+}

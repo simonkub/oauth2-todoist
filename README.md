@@ -1,18 +1,10 @@
-# This package provides Todoist OAuth 2.0 support for the PHP League's OAuth 2.0 Client.
+# Todoist Provider for OAuth 2.0 Client
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/simonkub/oauth2-todoist.svg?style=flat-square)](https://packagist.org/packages/simonkub/oauth2-todoist)
-[![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/simonkub/oauth2-todoist/run-tests?label=tests)](https://github.com/simonkub/oauth2-todoist/actions?query=workflow%3Arun-tests+branch%3Amaster)
+![Tests](https://github.com/simonkub/oauth2-todoist/workflows/Tests/badge.svg)
 [![Total Downloads](https://img.shields.io/packagist/dt/simonkub/oauth2-todoist.svg?style=flat-square)](https://packagist.org/packages/simonkub/oauth2-todoist)
 
-This is where your description should go. Try and limit it to a paragraph or two. Consider adding a small example.
-
-## Support us
-
-[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/package-skeleton-php.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/package-skeleton-php)
-
-We invest a lot of resources into creating [best in class open source packages](https://spatie.be/open-source). You can support us by [buying one of our paid products](https://spatie.be/open-source/support-us).
-
-We highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using. You'll find our address on [our contact page](https://spatie.be/about-us). We publish all received postcards on [our virtual postcard wall](https://spatie.be/open-source/postcards).
+Todoist Sync API OAuth 2.0 support for the PHP League's OAuth 2.0 Client.
 
 ## Installation
 
@@ -25,8 +17,45 @@ composer require simonkub/oauth2-todoist
 ## Usage
 
 ```php
-$skeleton = new Simonkub\Oauth2Todoist();
-echo $skeleton->echoPhrase('Hello, Simonkub!');
+// configure and create client
+$client = new Simonkub\OAuth2\Client\Todoist([
+    "clientId" => "CLIENT_ID",
+    "clientSecret" => "CLIENT_SECRET",
+    "redirectUri" => "REDIRECT_URI"
+]);
+
+// optionally set client scopes, defaults to "data:read"
+$client->setDefaultScopes(["data:read"]);
+
+// redirect to todoist login page
+$loginPageUri = $client->getAuthorizationUrl();
+
+// after login and beeing redirected back to your application
+// read authorization code from request
+$authorizationCode = $_GET['code'];
+
+// exchange authorization code for token
+$token = $client->getAccessToken("authorization_code", [
+    "code" => $authorizationCode
+]);
+
+// read single resource
+$response = $client->readResource("projects", $token);
+
+// read multiple resources
+$response = $client->readResources(["projects", "labels"], $token);
+
+// write resource
+$commands = [
+    "type" => "item_add",
+    "uuid" => uniqid(),
+    "temp_id" => uniqid(),
+    "args" => [
+        "project_id" => "foo",
+        "content" => "bar"
+    ]
+];
+$response = $client->writeResources($commands, $token);
 ```
 
 ## Testing

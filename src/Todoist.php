@@ -11,23 +11,15 @@ use Psr\Http\Message\ResponseInterface;
 
 class Todoist extends AbstractProvider
 {
-    protected static $BASE_AUTH_URL = "https://todoist.com/oauth";
+    protected static string $BASE_AUTH_URL = "https://todoist.com/oauth";
 
-    protected static $BASE_API_URL = "https://api.todoist.com/sync/v8/sync";
+    protected static string $BASE_API_URL = "https://api.todoist.com/sync/v8/sync";
 
-    protected $scopes = ["data:read"];
+    protected array $scopes = ["data:read"];
 
     public function getBaseAuthorizationUrl(): string
     {
         return static::$BASE_AUTH_URL . "/authorize";
-    }
-
-    protected function getDefaultHeaders(): array
-    {
-        return [
-            "Content-Type" => "application/x-www-form-urlencoded",
-            "Accept" => "application/json",
-        ];
     }
 
     public function getBaseAccessTokenUrl(array $params): string
@@ -37,14 +29,9 @@ class Todoist extends AbstractProvider
         return static::$BASE_AUTH_URL . "/access_token?{$queryParams}";
     }
 
-    public function getResourceOwnerDetailsUrl(AccessToken $token): string
+    public function getResourceOwnerDetailsUrl(AccessTokenInterface $token): string
     {
         return static::$BASE_API_URL . "?token={$token->getToken()}&sync_token=*&resource_types=[\"user\"]";
-    }
-
-    protected function getDefaultScopes(): array
-    {
-        return $this->scopes;
     }
 
     public function setDefaultScopes(array $scopes)
@@ -68,7 +55,7 @@ class Todoist extends AbstractProvider
         $body = array_merge($requiredBody, $options["body"] ?? []);
         $options["body"] = $this->buildQueryString($body);
 
-        $request = $this->getAuthenticatedRequest("POST", static::$BASE_API_URL, $token, $options);
+        $request = $this->getAuthenticatedRequest(self::METHOD_POST, static::$BASE_API_URL, $token, $options);
 
         return $this->getParsedResponse($request);
     }
@@ -83,9 +70,22 @@ class Todoist extends AbstractProvider
         $body = array_merge($requiredBody, $options["body"] ?? []);
         $options["body"] = $this->buildQueryString($body);
 
-        $request = $this->getAuthenticatedRequest("POST", static::$BASE_API_URL, $token, $options);
+        $request = $this->getAuthenticatedRequest(self::METHOD_POST, static::$BASE_API_URL, $token, $options);
 
         return $this->getParsedResponse($request);
+    }
+
+    protected function getDefaultHeaders(): array
+    {
+        return [
+            "Content-Type" => "application/x-www-form-urlencoded",
+            "Accept" => "application/json",
+        ];
+    }
+
+    protected function getDefaultScopes(): array
+    {
+        return $this->scopes;
     }
 
     protected function checkResponse(ResponseInterface $response, $data)
@@ -97,7 +97,7 @@ class Todoist extends AbstractProvider
         throw new IdentityProviderException(
             json_encode($data),
             $response->getStatusCode(),
-            $response
+            (string) $response->getBody()
         );
     }
 
